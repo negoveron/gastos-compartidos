@@ -1,0 +1,15 @@
+<div class="home-page">
+  <mat-card class="home-card" *ngIf="user$ | async as user; else loading">
+    <mat-card-title>¡Hola, {{ displayName(user) }}!</mat-card-title>
+    <mat-card-content>
+      <p>Bienvenido/a a Gastos Compartidos.</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-stroked-button color="warn" type="button" (click)="logout()">Cerrar sesión</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <ng-template #loading>
+    <p>Cargando...</p>
+  </ng-template>
+</div>
