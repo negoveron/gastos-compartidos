@@ -1,0 +1,29 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 360px;
+  padding: 1.5rem;
+}
+
+.full-width {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.error-message {
+  color: #b00020;
+  margin: 0.5rem 0 1rem;
+}
+
+.switch-link {
+  margin-top: 1rem;
+  text-align: center;
+}
