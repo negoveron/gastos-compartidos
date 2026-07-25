@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.angular/
+coverage/
+.env
+.env.local
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+backend/data/
+*.log
+.DS_Store
+.atl/
+frontend/.atl/
