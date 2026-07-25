@@ -6,6 +6,7 @@ const { buildConfig } = require('./config/env');
 const { createConnection } = require('./db/connection');
 const { runMigrations } = require('./db/migrate');
 const { createAuthModule } = require('./modules/auth');
+const { createGroupsModule } = require('./modules/groups');
 const { createApp } = require('./app');
 
 const result = buildConfig(process.env);
@@ -25,8 +26,9 @@ const { config } = result;
 const db = createConnection(config.dbPath);
 runMigrations(db);
 
-const { router: authRouter } = createAuthModule({ db, config });
-const app = createApp({ config, authRouter });
+const { router: authRouter, requireAuth } = createAuthModule({ db, config });
+const { router: groupsRouter } = createGroupsModule({ db, requireAuth });
+const app = createApp({ config, authRouter, groupsRouter });
 
 app.listen(config.port, () => {
   // eslint-disable-next-line no-console

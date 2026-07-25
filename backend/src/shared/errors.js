@@ -47,6 +47,18 @@ function InternalError() {
   return new AppError(500, 'INTERNAL_ERROR', 'Error interno del servidor');
 }
 
+function NotAuthorizedError(message) {
+  return new AppError(403, 'NOT_AUTHORIZED', message || 'No tenés permiso para esta operación');
+}
+
+function GroupNotFoundError() {
+  return new AppError(404, 'GROUP_NOT_FOUND', 'Grupo no encontrado');
+}
+
+function EmailNotFoundError(email) {
+  return new AppError(404, 'EMAIL_NOT_FOUND', `Email no encontrado: ${email} - el usuario debe tener una cuenta antes de ser invitado a un grupo`);
+}
+
 module.exports = {
   AppError,
   ValidationError,
@@ -57,4 +69,7 @@ module.exports = {
   AuthTokenExpiredError,
   AuthTokenInvalidError,
   InternalError,
+  NotAuthorizedError,
+  GroupNotFoundError,
+  EmailNotFoundError,
 };
