@@ -11,3 +11,5 @@ coverage/
 backend/data/
 *.log
 .DS_Store
+.atl/
+frontend/.atl/
