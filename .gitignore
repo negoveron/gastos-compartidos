@@ -13,3 +13,5 @@ backend/data/
 .DS_Store
 .atl/
 frontend/.atl/
+.claude/
+.mcp.json
