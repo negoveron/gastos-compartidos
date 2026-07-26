@@ -1,0 +1,98 @@
+.group-list-page {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.group-list-card {
+  width: 100%;
+  max-width: 800px;
+  padding: 1.5rem;
+}
+
+.create-button {
+  margin-bottom: 1rem;
+}
+
+.groups-table {
+  width: 100%;
+}
+
+.no-groups {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.members-section {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.members-title {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.members-table {
+  width: 100%;
+}
+
+.invite-section {
+  margin-top: 0.5rem;
+}
+
+.owner-badge {
+  font-size: 0.85rem;
+  color: #666;
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.invite-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-card {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
+  z-index: 1001;
+}
+
+.full-width {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.error-message {
+  color: #b00020;
+  margin: 0.5rem 0 1rem;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
