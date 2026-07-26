@@ -14,9 +14,10 @@ const { errorHandler } = require('./shared/error-handler');
  *   config: { corsOrigins: string[] },
  *   authRouter: import('express').Router,
  *   groupsRouter?: import('express').Router,
+ *   expensesRouter?: import('express').Router,
  * }} deps
  */
-function createApp({ config, authRouter, groupsRouter }) {
+function createApp({ config, authRouter, groupsRouter, expensesRouter }) {
   const app = express();
 
   app.use(
@@ -30,6 +31,9 @@ function createApp({ config, authRouter, groupsRouter }) {
   app.use('/api/auth', authRouter);
   if (groupsRouter) {
     app.use('/api/groups', groupsRouter);
+  }
+  if (expensesRouter) {
+    app.use('/api', expensesRouter);
   }
 
   app.use((req, res, next) => {
