@@ -1,0 +1,21 @@
+<div class="create-group-page">
+  <mat-card class="create-group-card">
+    <mat-card-title>Crear Grupo</mat-card-title>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre del grupo</mat-label>
+        <input matInput type="text" formControlName="nombre" />
+        <mat-error *ngIf="form.controls['nombre'].hasError('required')">El nombre es requerido.</mat-error>
+      </mat-form-field>
+
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="submitting">
+        {{ submitting ? 'Creando...' : 'Crear Grupo' }}
+      </button>
+    </form>
+
+    <button mat-button routerLink="/groups/list" class="back-button">Volver a grupos</button>
+  </mat-card>
+</div>

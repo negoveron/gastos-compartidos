@@ -1,0 +1,109 @@
+<div class="group-list-page">
+  <mat-card class="group-list-card">
+    <mat-card-title>Mis Grupos</mat-card-title>
+
+    <button mat-raised-button color="primary" routerLink="/groups/create" class="create-button">
+      Crear Grupo
+    </button>
+
+    <div *ngIf="(groups$ | async) as groups">
+      <table mat-table [dataSource]="groups" class="groups-table">
+        <!-- Nombre Column -->
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let group">{{ group.nombre }}</td>
+        </ng-container>
+
+        <!-- Owner Column -->
+        <ng-container matColumnDef="owner">
+          <th mat-header-cell *matHeaderCellDef>Propietario</th>
+          <td mat-cell *matCellDef="let group">
+            {{ group.isOwner ? 'Tú' : 'Miembro' }}
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let group">
+            <button mat-button (click)="loadMembers(group.id)">Miembros</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <div *ngIf="groups.length === 0" class="no-groups">
+        <p>No tenés grupos aún. ¡Creá uno!</p>
+      </div>
+    </div>
+
+    <!-- Members section for each group (inline per task requirement) -->
+    <div *ngIf="(groups$ | async) as groups">
+      <div *ngFor="let group of groups" class="members-section">
+        <div *ngIf="membersByGroupId[group.id]">
+          <h3 class="members-title">Miembros de {{ group.nombre }}</h3>
+
+          <table mat-table [dataSource]="membersByGroupId[group.id]" class="members-table">
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef>Email</th>
+              <td mat-cell *matCellDef="let member">{{ member.email }}</td>
+            </ng-container>
+
+            <!-- Nombre Column -->
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let member">{{ member.nombre || '-' }}</td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let member">
+                <ng-container *ngIf="group.isOwner && !member.isOwner">
+                  <button mat-icon-button color="warn" (click)="removeMember(group.id, member.userId)" matTooltip="Remover miembro">
+                    <mat-icon>remove_circle</mat-icon>
+                  </button>
+                </ng-container>
+                <ng-container *ngIf="member.isOwner">
+                  <span class="owner-badge">Propietario</span>
+                </ng-container>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['email', 'nombre', 'actions']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['email', 'nombre', 'actions']"></tr>
+          </table>
+
+          <div class="invite-section" *ngIf="group.isOwner">
+            <button mat-stroked-button (click)="openInviteDialog(group.id)">Invitar miembro</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<!-- Invite Dialog -->
+<div *ngIf="inviteDialogOpenForGroupId !== null" class="invite-dialog">
+  <div class="dialog-backdrop" (click)="closeInviteDialog()"></div>
+  <mat-card class="dialog-card">
+    <mat-card-title>Invitar a miembro</mat-card-title>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" [(ngModel)]="inviteEmail" autocomplete="email" />
+    </mat-form-field>
+
+    <p class="error-message" *ngIf="inviteError">{{ inviteError }}</p>
+
+    <div class="dialog-actions">
+      <button mat-button (click)="closeInviteDialog()">Cancelar</button>
+      <button mat-raised-button color="primary" (click)="submitInvite()" [disabled]="inviteSubmitting || !inviteEmail">
+        {{ inviteSubmitting ? 'Invitando...' : 'Invitar' }}
+      </button>
+    </div>
+  </mat-card>
+</div>
