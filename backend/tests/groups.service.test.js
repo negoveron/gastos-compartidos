@@ -146,6 +146,34 @@ test('listMyGroups: returns all groups where user is member', async () => {
   );
 });
 
+test('listMyGroups: isOwner es true para el creador y false para un miembro no-owner', async () => {
+  const { groupsService, groupsRepository } = buildService();
+
+  // Seed users
+  groupsRepository._addUser({ id: 1, email: 'owner@example.com' });
+  groupsRepository._addUser({ id: 2, email: 'member@example.com' });
+
+  // Create group with owner 1
+  const group = await groupsService.create({ nombre: 'Test', ownerId: 1 });
+
+  // Invite user2 to the group
+  await groupsService.inviteMember({ groupId: group.id, email: 'member@example.com', inviterId: 1 });
+
+  // Verify isOwner==true for user1
+  const groupsOwner = await groupsService.listMyGroups(1);
+  assert.deepEqual(
+    groupsOwner.map((g) => ({ id: g.id, isOwner: g.isOwner })),
+    [{ id: group.id, isOwner: true }]
+  );
+
+  // Verify isOwner==false for user2
+  const groupsMember = await groupsService.listMyGroups(2);
+  assert.deepEqual(
+    groupsMember.map((g) => ({ id: g.id, isOwner: g.isOwner })),
+    [{ id: group.id, isOwner: false }]
+  );
+});
+
 test('inviteMember: non-owner is rejected with NOT_AUTHORIZED', async () => {
   const { groupsService, groupsRepository } = buildService();
 

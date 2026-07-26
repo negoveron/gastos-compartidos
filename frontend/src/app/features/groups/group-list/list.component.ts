@@ -20,13 +20,14 @@ export class GroupListComponent implements OnInit {
   inviteEmail = '';
   inviteSubmitting = false;
   inviteError: string | null = null;
+  removeMemberError: string | null = null;
 
   constructor(private groupsService: GroupsService) {}
 
   ngOnInit(): void {}
 
-  loadMembers(groupId: number): void {
-    if (this.membersByGroupId[groupId]) {
+  loadMembers(groupId: number, forceRefresh: boolean = false): void {
+    if (this.membersByGroupId[groupId] && !forceRefresh) {
       return; // Already loaded
     }
     this.loadingMembers[groupId] = true;
@@ -61,13 +62,14 @@ export class GroupListComponent implements OnInit {
     this.inviteSubmitting = true;
     this.inviteError = null;
 
-    this.groupsService.invite(this.inviteDialogOpenForGroupId, this.inviteEmail).subscribe({
-      next: () => {
-        this.inviteSubmitting = false;
-        this.closeInviteDialog();
-        // Refresh members list
-        this.loadMembers(this.inviteDialogOpenForGroupId!);
-      },
+    const groupId = this.inviteDialogOpenForGroupId;
+    this.groupsService.invite(groupId, this.inviteEmail).subscribe({    
+        next: () => {
+          this.inviteSubmitting = false;
+          this.closeInviteDialog();
+          // Refresh members list
+          this.loadMembers(groupId, true);
+        },
       error: (err) => {
         this.inviteSubmitting = false;
         this.inviteError = err.error?.error?.message ?? 'Error al invitar al usuario';
@@ -77,11 +79,15 @@ export class GroupListComponent implements OnInit {
 
   removeMember(groupId: number, userId: number): void {
     if (confirm('¿Estás seguro de remover este miembro?')) {
+      this.removeMemberError = null;
       this.groupsService.removeMember(groupId, userId).subscribe({
         next: () => {
           // Refresh members list
-          this.loadMembers(groupId);
+          this.loadMembers(groupId, true);
         },
+        error: (err) => {
+          this.removeMemberError = err.error?.error?.message ?? 'Error al remover al miembro';
+        },        
       });
     }
   }

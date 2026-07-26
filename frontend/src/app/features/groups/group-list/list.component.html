@@ -77,6 +77,8 @@
             <tr mat-row *matRowDef="let row; columns: ['email', 'nombre', 'actions']"></tr>
           </table>
 
+          <p class="error-message" *ngIf="removeMemberError">{{ removeMemberError }}</p>
+          
           <div class="invite-section" *ngIf="group.isOwner">
             <button mat-stroked-button (click)="openInviteDialog(group.id)">Invitar miembro</button>
           </div>

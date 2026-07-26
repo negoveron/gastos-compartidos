@@ -11,11 +11,12 @@ const {
   GroupNotFoundError,
 } = require('../../shared/errors');
 
-function toPublicGroup(row) {
+function toPublicGroup(row, userId) {
   return {
     id: row.id,
     nombre: row.nombre,
     ownerId: row.owner_id,
+    isOwner: row.owner_id === userId,
   };
 }
 
@@ -51,7 +52,7 @@ function createGroupsService({ groupsRepository }) {
         ownerId,
       });
 
-      return toPublicGroup(group);
+       return toPublicGroup(group, ownerId);
     },
 
     /**
@@ -59,7 +60,7 @@ function createGroupsService({ groupsRepository }) {
      */
     async listMyGroups(userId) {
       const rows = groupsRepository.findByMember(userId);
-      return rows.map(toPublicGroup);
+       return rows.map((row) => toPublicGroup(row, userId));
     },
 
     /**

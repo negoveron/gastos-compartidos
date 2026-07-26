@@ -152,4 +152,46 @@ describe('GroupListComponent', () => {
 
     expect(groupsService.removeMember).not.toHaveBeenCalled();
   });
+
+  it('should refresh members list after removing a member', () => {
+    component.membersByGroupId[1] = mockMembers;
+    spyOn(window, 'confirm').and.returnValue(true);
+
+    component.removeMember(1, 2);
+
+    expect(groupsService.getMembers).toHaveBeenCalledWith(1);
+  });
+
+  it('should handle remove member error', () => {
+    groupsService.removeMember.and.returnValue(
+      throwError(() => ({
+        error: { error: { message: 'No autorizado' } },
+      }))
+    );
+    spyOn(window, 'confirm').and.returnValue(true);
+
+    component.removeMember(1, 2);
+
+    expect(component.removeMemberError).toBe('No autorizado');
+  });
+
+  it('should clear removeMemberError on a new remove attempt', () => {
+    component.removeMemberError = 'error previo';
+    groupsService.removeMember.and.returnValue(of({ success: true }));
+    spyOn(window, 'confirm').and.returnValue(true);
+
+    component.removeMember(1, 2);
+
+    expect(component.removeMemberError).toBeNull();
+  });
+
+  it('should refresh the correct group members after inviting', () => {
+    component.inviteDialogOpenForGroupId = 1;
+    component.inviteEmail = 'new@example.com';
+
+    component.submitInvite();
+
+    expect(groupsService.getMembers).toHaveBeenCalledWith(1);
+  });
+
 });
