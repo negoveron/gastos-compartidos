@@ -1,0 +1,32 @@
+<div *ngIf="isOpen" class="settle-modal">
+  <div class="dialog-backdrop" (click)="onClose()"></div>
+  <mat-card class="dialog-card">
+    <mat-card-title>Registrar Pago</mat-card-title>
+
+    <div class="settle-info">
+      <p>
+        <strong>{{ getDebtorName() }}</strong> paga a
+        <strong>{{ getCreditorName() }}</strong>
+      </p>
+      <p class="debt-info">Deuda actual: <span class="debt-amount">{{ formatAmount(totalCents) }}</span></p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Monto a pagar</mat-label>
+        <input matInput type="number" [(ngModel)]="settleAmount" name="settleAmount" step="0.01" min="0.01" [max]="totalCents / 100" required />
+        <span matPrefix>$&nbsp;</span>
+        <mat-hint>Máximo: {{ formatAmount(totalCents) }}</mat-hint>
+      </mat-form-field>
+
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <div class="dialog-actions">
+        <button mat-button type="button" (click)="onClose()">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="submitting">
+          {{ submitting ? 'Registrando...' : 'Registrar Pago' }}
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>

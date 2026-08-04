@@ -1,0 +1,134 @@
+<div class="balance-view-page">
+  <mat-card class="balance-view-card">
+    <mat-card-title>
+      <span>Balances de {{ groupName }}</span>
+      <button mat-button color="primary" (click)="navigateToExpenses()" class="expenses-link">
+        Ver Gastos
+      </button>
+    </mat-card-title>
+
+    <div *ngIf="balances$ | async as balances">
+      <div *ngIf="balances.length === 0" class="no-balances">
+        <mat-icon>account_balance_wallet</mat-icon>
+        <p>¡Todo saldado! No hay deudas pendientes.</p>
+      </div>
+
+      <table mat-table [dataSource]="balances" class="balances-table" [trackBy]="trackByBalance" multiTemplateDataRows *ngIf="balances.length > 0">
+        <!-- Debtor Column -->
+        <ng-container matColumnDef="debtor">
+          <th mat-header-cell *matHeaderCellDef>Debe</th>
+          <td mat-cell *matCellDef="let balance">{{ getMemberName(balance.debtorId) }}</td>
+        </ng-container>
+
+        <!-- Creditor Column -->
+        <ng-container matColumnDef="creditor">
+          <th mat-header-cell *matHeaderCellDef>Le debe a</th>
+          <td mat-cell *matCellDef="let balance">{{ getMemberName(balance.creditorId) }}</td>
+        </ng-container>
+
+        <!-- Total Column -->
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef>Total</th>
+          <td mat-cell *matCellDef="let balance" class="amount-cell">
+            <span class="debt-amount">{{ formatAmount(balance.totalCents) }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let balance">
+            <button
+              mat-icon-button
+              (click)="toggleExpand(balance)"
+              matTooltip="{{ isExpanded(balance) ? 'Ocultar detalle' : 'Ver detalle' }}"
+              [attr.aria-expanded]="isExpanded(balance)"
+            >
+              <mat-icon>{{ isExpanded(balance) ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="openSettleModal(balance.debtorId, balance.creditorId, balance.totalCents)"
+              [disabled]="balance.totalCents === 0"
+            >
+              Pagar
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Expanded Detail Row -->
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let balance" [attr.colspan]="displayedColumns.length" class="expanded-cell">
+            <div class="breakdown-container" *ngIf="balance.breakdown && balance.breakdown.length > 0">
+              <h4>Desglose por gasto (FIFO):</h4>
+              <table class="breakdown-table">
+                <thead>
+                  <tr>
+                    <th>Gasto</th>
+                    <th>Fecha</th>
+                    <th class="amount-header">Monto</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of balance.breakdown">
+                    <td>{{ item.description }}</td>
+                    <td>{{ formatDate(item.createdAt) }}</td>
+                    <td class="amount-cell">{{ formatAmount(item.amountCents) }}</td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr class="total-row">
+                    <td colspan="2"><strong>Total</strong></td>
+                    <td class="amount-cell"><strong>{{ formatAmount(balance.totalCents) }}</strong></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <div *ngIf="!balance.breakdown || balance.breakdown.length === 0" class="no-breakdown">
+              Sin desglose disponible.
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpandedRow" class="detail-row"></tr>
+      </table>
+    </div>
+  </mat-card>
+</div>
+
+<!-- Settlement Modal -->
+<div *ngIf="settleModalOpen" class="settle-modal">
+  <div class="dialog-backdrop" (click)="closeSettleModal()"></div>
+  <mat-card class="dialog-card">
+    <mat-card-title>Registrar Pago</mat-card-title>
+
+    <div class="settle-info">
+      <p>
+        <strong>{{ getMemberName(selectedDebtorId!) }}</strong> paga a
+        <strong>{{ getMemberName(selectedCreditorId!) }}</strong>
+      </p>
+      <p class="debt-info">Deuda actual: <span class="debt-amount">{{ formatAmount(selectedTotalCents) }}</span></p>
+    </div>
+
+    <form (ngSubmit)="submitSettlement()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Monto a pagar</mat-label>
+        <input matInput type="number" [(ngModel)]="settleAmount" name="settleAmount" step="0.01" min="0.01" [max]="selectedTotalCents / 100" required />
+        <span matPrefix>$&nbsp;</span>
+        <mat-hint>Máximo: {{ formatAmount(selectedTotalCents) }}</mat-hint>
+      </mat-form-field>
+
+      <p class="error-message" *ngIf="settleError">{{ settleError }}</p>
+
+      <div class="dialog-actions">
+        <button mat-button type="button" (click)="closeSettleModal()">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="settleSubmitting">
+          {{ settleSubmitting ? 'Registrando...' : 'Registrar Pago' }}
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</div>
