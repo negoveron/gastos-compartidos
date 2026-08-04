@@ -1,0 +1,171 @@
+.balance-view-page {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.balance-view-card {
+  width: 100%;
+  max-width: 900px;
+  padding: 1.5rem;
+}
+
+.balance-view-card mat-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.balances-table {
+  width: 100%;
+}
+
+.no-balances {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+}
+
+.no-balances mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1rem;
+  color: #4caf50;
+}
+
+.amount-cell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.debt-amount {
+  font-weight: 500;
+  color: #b00020;
+}
+
+.expenses-link {
+  margin-left: auto;
+}
+
+.detail-row {
+  background: #fafafa;
+}
+
+.expanded-cell {
+  padding: 1rem 1.5rem !important;
+  border-top: 1px solid #e0e0e0;
+}
+
+.breakdown-container h4 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.breakdown-table th,
+.breakdown-table td {
+  padding: 0.5rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.breakdown-table th {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.breakdown-table .amount-header,
+.breakdown-table .amount-cell {
+  text-align: right;
+}
+
+.breakdown-table .total-row {
+  border-top: 2px solid #e0e0e0;
+}
+
+.breakdown-table .total-row td {
+  padding-top: 0.75rem;
+}
+
+.no-breakdown {
+  color: #999;
+  font-style: italic;
+  padding: 1rem 0;
+}
+
+.settle-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-card {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  padding: 1.5rem;
+  z-index: 1001;
+}
+
+.full-width {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.settle-info {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.settle-info p {
+  margin: 0.25rem 0;
+}
+
+.debt-info {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.debt-info .debt-amount {
+  font-weight: 600;
+  color: #b00020;
+}
+
+.error-message {
+  color: #b00020;
+  margin: 0.5rem 0 1rem;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
