@@ -4,7 +4,7 @@ Sistema para dividir gastos entre grupos de personas y gestionar el balance de d
 
 ## 🚀 Stack Tecnológico
 - **Backend**: Node.js + Express + Better-SQLite3.
-- **Frontend**: Angular 16 + Angular Material v15.
+- **Frontend**: Angular 16 + Angular Material v16.
 - **Arquitectura**: Layered Architecture (Repository $\rightarrow$ Service $\rightarrow$ Controller) y Core/Feature split en el frontend.
 
 ## ✨ Características Implementadas (MVP)
